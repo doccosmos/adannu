@@ -32,6 +32,7 @@ def chisq(data):
     t, mag, err = data
     mbar = np.sum(mag / (err * err)) / np.sum(1. / (err * err))
     stat = np.sum(((mag  - mbar) / err) ** 2.)
+    stat /= (len(t) - 1) # Check this
   except Exception, e:
     print (e)
   return stat
@@ -263,10 +264,10 @@ def sb(data):
     t, mag, err = data
     res = mag - np.mean(mag)
     idx = np.where(res[:-1] * res[1:] < 0)[0] + 1
-    sum = np.sum((res[:idx[0]] / err[:idx[0]]) ** 2.)
+    sum = np.sum((res[:idx[0]] / err[:idx[0]])) ** 2.
     for i in range(len(idx) - 1):
-      sum += np.sum((res[idx[i]: idx[i + 1]] / err[idx[i]: idx[i + 1]]) ** 2.)
-    sum += np.sum((res[idx[-1]:] / err[idx[-1]:]) ** 2.)
+      sum += np.sum((res[idx[i]: idx[i + 1]] / err[idx[i]: idx[i + 1]])) ** 2.
+    sum += np.sum((res[idx[-1]:] / err[idx[-1]:])) ** 2.
     stat = sum / (len(t) * len(idx))
   except Exception, e:
     print (e)
